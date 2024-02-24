@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stopwatch</title>
+    <style>
+        #stopwatch {
+            font-size: 40px;
+            text-align: center;
+            margin-top: 20%;
+        }
+        button {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+        }
+    </style>
+     <link rel="stylesheet" href="c.css">
+</head>
+<body>
+    <div id="stopwatch">
+        00:00:00
+    </div>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <button id="reset">Reset</button>
+
+    <script>
+        var stopwatchEl = document.getElementById('stopwatch')
+        var startButton = document.getElementById('start')
+        var stopButton = document.getElementById('stop')
+        var resetButton = document.getElementById('reset')
+
+        var elapsedMilliseconds = 0
+        var interval
+
+        function updateTime() {
+            var milliseconds = elapsedMilliseconds % 1000
+            var seconds = Math.floor(elapsedMilliseconds / 1000) % 60
+            var minutes = Math.floor(elapsedMilliseconds / 60000) % 60
+            var hours = Math.floor(elapsedMilliseconds / 3600000)
+
+            stopwatchEl.textContent = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0') + '.' +
+                String(milliseconds).padStart(3, '0')
+        }
+
+        startButton.addEventListener('click', function() {
+            if (!interval) {
+                var previousTimestamp = Date.now()
+                interval = setInterval(function() {
+                    var currentTimestamp = Date.now()
+                    elapsedMilliseconds += currentTimestamp - previousTimestamp
+                    previousTimestamp = currentTimestamp
+                    updateTime()
+                }, 10)
+            }
+        })
+
+        stopButton.addEventListener('click', function() {
+            clearInterval(interval)
+            interval = null
+        })
+
+        resetButton.addEventListener('click', function() {
+            elapsedMilliseconds = 0
+            updateTime()
+        })
+    </script>
+</body>
+</html>
